@@ -3,25 +3,25 @@ class User < ApplicationRecord
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable,
-         authentication_keys: [:login]
+         authentication_keys: [:email_or_username]
 
   validates :username, presence: true, uniqueness: true
   validate :username_is_alphanumeric
 
-  attr_writer :login
+  attr_accessor :email_or_username
 
-  def login
-    @login || username || email
+  def email_or_username
+    @email_or_username || email || username
   end
 
   private
 
   def self.find_for_database_authentication(warden_conditions)
     conditions = warden_conditions.dup
-    login = conditions.delete(:login)
+    email_or_username = conditions.delete(:email_or_username)
 
-    if login
-      where(conditions.to_h).where(["username = :value OR email = :value", { value: login }]).first
+    if email_or_username
+      where(conditions.to_h).where(["username = :value OR email = :value", { value: email_or_username }]).first
     elsif conditions.has_key?(:username) || conditions.has_key?(:email)
       where(conditions).first
     end
