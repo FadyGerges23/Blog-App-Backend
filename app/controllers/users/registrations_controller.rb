@@ -11,10 +11,19 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   # POST /resource
   def create
-    super do |resource|
+    build_resource(sign_up_params)
+
+    if resource.save
+      sign_up(resource_name, resource)
       UserRegistrationService.call(resource)
-      # render json: { user: resource, message: 'Registration successful' }
+      render json: { message: 'Sign up successful', user: resource }, status: :created
+    else
+      clean_up_passwords resource
+      set_minimum_password_length
+      render json: { errors: resource.errors.full_messages }, status: :unprocessable_entity
     end
+
+    return
   end
 
   # GET /resource/edit

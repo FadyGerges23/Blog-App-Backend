@@ -9,9 +9,17 @@ class Users::SessionsController < Devise::SessionsController
   # end
 
   # POST /resource/sign_in
-  # def create
-  #   super
-  # end
+  def create
+    self.resource = warden.authenticate(auth_options)
+    if resource
+      sign_in(resource_name, resource)
+      render json: { message: 'Sign in successful', user: resource }, status: :ok
+    else
+      render json: { message: 'Sign in failed', errors: ['Invalid email or password'] }, status: :unauthorized
+    end
+
+    return
+  end
 
   # DELETE /resource/sign_out
   # def destroy
