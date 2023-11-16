@@ -43,6 +43,10 @@ gem "bootsnap", require: false
 
 gem "devise" 
 
+gem 'devise-jwt'
+
+gem 'jsonapi-serializer'
+
 gem 'rack-cors'
 
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Users::RegistrationsController < Devise::RegistrationsController
+  respond_to :json
   # before_action :configure_sign_up_params, only: [:create]
   # before_action :configure_account_update_params, only: [:update]
 
@@ -16,14 +17,12 @@ class Users::RegistrationsController < Devise::RegistrationsController
     if resource.save
       sign_up(resource_name, resource)
       UserRegistrationService.call(resource)
-      render json: { message: 'Sign up successful', user: resource }, status: :created
     else
       clean_up_passwords resource
       set_minimum_password_length
-      render json: { errors: resource.errors.full_messages }, status: :unprocessable_entity
     end
 
-    return
+    respond_with resource
   end
 
   # GET /resource/edit
@@ -71,4 +70,25 @@ class Users::RegistrationsController < Devise::RegistrationsController
   # def after_inactive_sign_up_path_for(resource)
   #   super(resource)
   # end
+
+  private
+
+  def respond_with(resource, _opts = {})
+    if request.method == "POST" && resource.persisted?
+      render json: {
+        message: 'Signed up successfully',
+        user: UserSerializer.new(resource).serializable_hash[:data][:attributes]
+      }, status: :created
+    elsif request.method == "PUT"
+      render json: {
+        message: "Account edited successfully.",
+        user: UserSerializer.new(resource).serializable_hash[:data][:attributes]
+      }, status: :ok
+    else
+      render json: {
+        errors: resource.errors.full_messages
+      }, status: :unprocessable_entity
+    end
+  end
+
 end
