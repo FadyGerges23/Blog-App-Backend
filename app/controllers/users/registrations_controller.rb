@@ -31,9 +31,11 @@ class Users::RegistrationsController < Devise::RegistrationsController
   # end
 
   # PUT /resource
-  # def update
-  #   super
-  # end
+  def update
+    user = User.find(params[:id])
+    authorize user
+    super
+  end
 
   # DELETE /resource
   # def destroy
