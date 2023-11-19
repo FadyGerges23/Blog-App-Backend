@@ -15,4 +15,5 @@ Rails.application.routes.draw do
   mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.development?
   
   root "home#index"
+  get '/current_user', to: 'current_user#index'
 end
