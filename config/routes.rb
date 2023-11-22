@@ -16,4 +16,8 @@ Rails.application.routes.draw do
   
   root "home#index"
   get '/current_user', to: 'current_user#index'
+
+  resources :users, only: [] do
+    resources :posts, only: [:index, :show, :create, :update, :destroy]
+  end
 end
