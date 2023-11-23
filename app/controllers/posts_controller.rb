@@ -4,13 +4,17 @@ class PostsController < ApplicationController
     def index
         @user = User.find(params[:user_id])
         @posts = @user.posts
-        render json: { posts: @posts }, status: :ok
+        serialized_posts = @posts.map do |post|
+            serialize_post(post)
+        end
+        render json: { posts: serialized_posts }, status: :ok
     end
 
     def show
         @user = User.find(params[:user_id])
         @post = @user.posts.find(params[:id])
-        render json: PostSerializer.new(@post).serializable_hash[:data][:attributes], status: :ok
+        serialized_post = serialize_post(@post)
+        render json: serialized_post, status: :ok
     end
     
     def create
@@ -44,7 +48,13 @@ class PostsController < ApplicationController
 
     private
 
+    def serialize_post(post)
+        serialized_post = PostSerializer.new(post).serializable_hash[:data][:attributes]
+        serialized_post[:category] = CategorySerializer.new(post.category).serializable_hash[:data][:attributes]
+        serialized_post
+    end
+
     def post_params
-        params.require(:post).permit(:title, :body)
+        params.require(:post).permit(:title, :body, :category_id)
     end
 end
