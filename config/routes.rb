@@ -23,4 +23,6 @@ Rails.application.routes.draw do
 
   resources :categories, only: [:index]
 
+  resources :tags, only: [:index, :create]
+
 end
