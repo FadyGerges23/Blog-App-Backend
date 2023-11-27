@@ -18,8 +18,10 @@ Rails.application.routes.draw do
   get '/current_user', to: 'current_user#index'
 
   resources :users, only: [] do
-    resources :posts, only: [:index, :show, :create, :update, :destroy]
+    resources :user_posts, only: [:index, :show, :create, :update, :destroy]
   end
+
+  resources :posts, only: [:index, :show]
 
   resources :categories, only: [:index]
 
