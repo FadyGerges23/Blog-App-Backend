@@ -18,10 +18,14 @@ Rails.application.routes.draw do
   get '/current_user', to: 'current_user#index'
 
   resources :users, only: [] do
-    resources :user_posts, only: [:index, :show, :create, :update, :destroy]
+    resources :posts, only: [:show, :create, :update, :destroy], controller: "user_posts" do
+      get '/page/:page', action: :index, on: :collection
+    end
   end
 
-  resources :posts, only: [:index, :show]
+  resources :posts, only: [:show] do
+    get '/page/:page', action: :index, on: :collection
+  end
 
   resources :categories, only: [:index]
 

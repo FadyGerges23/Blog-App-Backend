@@ -3,11 +3,16 @@ class UserPostsController < ApplicationController
     
     def index
         @user = User.find(params[:user_id])
-        @posts = @user.posts.order(created_at: :desc)
+        puts "Watchhh"
+        puts params[:page]
+        @posts = @user.posts.order(created_at: :desc).page(params[:page])
         serialized_posts = @posts.map do |post|
             serialize_post(post)
         end
-        render json: { posts: serialized_posts }, status: :ok
+        render json: { 
+            posts: serialized_posts, 
+            pagesCount: @posts.total_pages
+        }, status: :ok
     end
 
     def show

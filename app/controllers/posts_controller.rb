@@ -1,10 +1,14 @@
 class PostsController < ApplicationController
     
     def index
-        @posts = Post.all.order(created_at: :desc).map do |post|
+        @posts = Post.all.order(created_at: :desc).page(params[:page])
+        serialized_posts = @posts.map do |post|
             serialize_post(post)
         end
-        render json: { posts: @posts }, status: :ok
+        render json: { 
+            posts: serialized_posts,
+            pagesCount:  @posts.total_pages
+        }, status: :ok
     end
 
     def show

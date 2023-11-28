@@ -80,3 +80,5 @@ gem "pundit", "~> 2.3"
 
 gem 'carrierwave', '~> 3.0'
 # gem 'mini_magick'
+
+gem 'kaminari'
