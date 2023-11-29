@@ -3,9 +3,10 @@ class UserPostsController < ApplicationController
     
     def index
         @user = User.find(params[:user_id])
-        puts "Watchhh"
-        puts params[:page]
-        @posts = @user.posts.order(created_at: :desc).page(params[:page])
+        post_filters = PostFilters.new(params, @user.posts)
+        filtered_posts = post_filters.filter
+
+        @posts = filtered_posts.order(created_at: :desc).page(params[:page])
         serialized_posts = @posts.map do |post|
             serialize_post(post)
         end

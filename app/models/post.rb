@@ -7,4 +7,9 @@ class Post < ApplicationRecord
   validates :body, presence: true
 
   paginates_per 10
+
+  def self.ransackable_attributes(auth_object = nil)
+    ["title", "body", "category_id"]
+  end
+
 end
