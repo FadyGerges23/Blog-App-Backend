@@ -84,3 +84,7 @@ gem 'carrierwave', '~> 3.0'
 gem 'kaminari'
 
 gem 'ransack'
+
+gem 'activeadmin'
+
+gem 'sassc'

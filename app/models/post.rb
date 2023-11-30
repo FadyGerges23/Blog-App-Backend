@@ -12,4 +12,8 @@ class Post < ApplicationRecord
     ["title", "body", "category_id"]
   end
 
+  def self.ransackable_associations(auth_object = nil)
+    ["tags"]
+  end
+
 end
