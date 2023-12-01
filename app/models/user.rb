@@ -22,6 +22,11 @@ class User < ApplicationRecord
     @email_or_username || email || username
   end
 
+  def self.ransackable_attributes(auth_object = nil)
+    ["created_at", "display_name", "email", "username"]
+  end
+  
+
   private
 
   def self.find_for_database_authentication(warden_conditions)

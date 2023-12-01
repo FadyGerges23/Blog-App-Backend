@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  devise_for :admin_users, ActiveAdmin::Devise.config
+  ActiveAdmin.routes(self)
   devise_for :users, controllers: { registrations: 'users/registrations', sessions: 'users/sessions' }, :skip => 'registrations'
 
   devise_scope :user do
@@ -18,7 +20,13 @@ Rails.application.routes.draw do
   get '/current_user', to: 'current_user#index'
 
   resources :users, only: [] do
-    resources :posts, only: [:index, :show, :create, :update, :destroy]
+    resources :posts, only: [:show, :create, :update, :destroy], controller: "user_posts" do
+      get '/page/:page', action: :index, on: :collection
+    end
+  end
+
+  resources :posts, only: [:show] do
+    get '/page/:page', action: :index, on: :collection
   end
 
   resources :categories, only: [:index]
